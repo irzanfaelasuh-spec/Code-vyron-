@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>VYRON Code</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<style>
+:root{--bg:#070a10;--panel:#0b1018;--panel2:#0e151f;--panel3:#121b27;--line:#1a2737;--line2:#284056;--text:#e6eef7;--muted:#7f91a5;--cyan:#48c7ff;--blue:#7aa7ff;--violet:#9a7bff;--green:#4be3a7;--red:#ff647c;--yellow:#f3c86a}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font:13px Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input,textarea,select{font:inherit}button{color:inherit}
+.app{height:100dvh;display:grid;grid-template-rows:50px minmax(0,1fr) 25px;background:var(--bg)}
+.top{display:flex;align-items:center;gap:7px;padding:0 8px;background:#080d14;border-bottom:1px solid var(--line);position:relative;z-index:20}
+.logo{width:32px;height:32px;border:1px solid #1e6c91;border-radius:10px;display:grid;place-items:center;background:linear-gradient(145deg,#0e2231,#0a1018);color:var(--cyan);font-weight:900;box-shadow:0 0 24px #48c7ff13}.brand{font-weight:900;letter-spacing:.11em}.sub{color:var(--muted);font-size:10px;margin-left:5px}.project{min-width:130px;max-width:230px;flex:0 1 220px;background:#0b121b;border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--text)}.spacer{flex:1}.btn{background:#0b121b;border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer;transition:.16s}.btn:hover{background:#111a26;border-color:var(--line2);transform:translateY(-1px)}.btn:active{transform:scale(.97)}.run{color:var(--green);border-color:#1a5e48}.warn{color:var(--yellow)}.accent{color:var(--cyan);border-color:#205c78}.ghost{color:var(--muted)}
+.main{min-height:0;display:grid;grid-template-columns:44px 240px minmax(0,1fr) 360px;gap:1px;background:var(--line)}
+.activity{background:#080d14;display:flex;flex-direction:column;align-items:center;padding:7px 0;gap:5px}.act{width:34px;height:34px;border-radius:9px;background:transparent;border:1px solid transparent;color:#7e90a4;display:grid;place-items:center;cursor:pointer;font-size:16px}.act:hover,.act.on{background:#0f1925;border-color:#213247;color:#fff}.act.on{box-shadow:inset 2px 0 0 var(--cyan)}.act.bottom{margin-top:auto}
+.sidebar{min-width:0;background:#0a0f16;display:flex;flex-direction:column}.sideHead{padding:11px 12px 7px;color:#8ea0b4;font-size:10px;letter-spacing:.12em;font-weight:800;display:flex;align-items:center;gap:7px}.sideHead .grow{flex:1}.smallBtn{background:#0d1620;border:1px solid #1c2b3c;border-radius:7px;padding:4px 7px;color:#9fb2c7;cursor:pointer}.tree{min-height:0;overflow:auto;padding:2px 7px 12px}.node{user-select:none}.row{display:flex;align-items:center;gap:6px;height:30px;padding:0 7px;border-radius:7px;color:#a9b8c9;cursor:pointer}.row:hover{background:#0f1823;color:#fff}.row.active{background:#112235;color:#fff}.indent{width:15px;flex:0 0 15px}.chev{width:11px;color:#5f7389}.folder{color:#6fc9ff}.fileIcon{width:18px;font:10px/1 monospace;font-weight:800}.f-html{color:#ff965f}.f-css{color:#63c5ff}.f-js{color:#ffd76b}.f-py{color:#8dd1ff}.f-json{color:#f1d17b}.f-rust{color:#ff9e73}.f-md{color:#b2bcc9}.f-other{color:#9facc0}.outline{border-top:1px solid var(--line);padding:9px 8px;max-height:33%;overflow:auto}.outline h4{margin:0 6px 7px;color:#8598ad;font-size:10px;letter-spacing:.1em}.outlineItem{padding:5px 8px;color:#90a3b6;border-radius:6px;cursor:pointer;font-size:11px}.outlineItem:hover{background:#0f1823;color:#fff}
+.editorArea{min-width:0;min-height:0;display:grid;grid-template-rows:38px minmax(0,1fr) 25px;background:#0a1017}.tabs{display:flex;min-width:0;overflow:auto;border-bottom:1px solid var(--line)}.tab{height:38px;display:flex;align-items:center;gap:7px;padding:0 12px;border:0;border-right:1px solid var(--line);background:transparent;color:#8ea0b4;white-space:nowrap;cursor:pointer}.tab.active{color:#fff;background:#0e1722;border-top:2px solid var(--cyan)}.editorWrap{position:relative;min-height:0;overflow:hidden}.CodeMirror{height:100%;background:#0a1017;color:#dce8f5;font:13px/1.65 "JetBrains Mono",Consolas,monospace}.fallbackEditor{width:100%;height:100%;border:0;outline:0;resize:none;background:#0a1017;color:#dce8f5;padding:16px;font:13px/1.65 "JetBrains Mono",Consolas,monospace;tab-size:2}.CodeMirror-gutters{background:#0a1017;border-right:1px solid #152232}.CodeMirror-linenumber{color:#486078}.CodeMirror-activeline-background{background:#0f1823}.CodeMirror-cursor{border-left-color:#fff}.status{display:flex;gap:14px;align-items:center;padding:0 9px;border-top:1px solid var(--line);color:#6f8296;font-size:10px}.status .ok{color:var(--green)}.status .lang{color:#b4c3d2}
+.runtime{min-width:0;min-height:0;background:#0a1017;display:grid;grid-template-rows:38px minmax(0,1fr)}.rTabs{display:flex;border-bottom:1px solid var(--line)}.rTab{padding:0 11px;border:0;background:transparent;color:#8193a7;cursor:pointer}.rTab.active{color:#fff;border-bottom:2px solid var(--cyan)}.panel{display:none;min-height:0}.panel.active{display:grid}.preview{grid-template-rows:39px minmax(0,1fr)}.tools{display:flex;gap:6px;align-items:center;padding:6px;border-bottom:1px solid var(--line)}.url{flex:1;min-width:0;background:#080e15;border:1px solid var(--line);border-radius:7px;padding:7px 9px;color:#73879c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.frameWrap{min-height:0;padding:8px;background:#060b11}.frame{width:100%;height:100%;border:1px solid #20344a;border-radius:9px;background:white}.console,.problems,.terminal{grid-template-rows:39px minmax(0,1fr)}.head{display:flex;align-items:center;gap:7px;padding:0 9px;border-bottom:1px solid var(--line);font-size:10px;color:#8ea0b4;letter-spacing:.08em}.head .grow{flex:1}.body{min-height:0;overflow:auto;padding:10px 11px;font:12px/1.55 "JetBrains Mono",Consolas,monospace}.empty{height:100%;display:grid;place-items:center;color:#4f6479;text-align:center;padding:20px}.log{padding:4px 0;white-space:pre-wrap;word-break:break-word}.log.err{color:#ff91a0}.log.warn{color:#f4cd78}.log.ok{color:#7aefc0}.problem{border-bottom:1px solid var(--line);padding:9px}.problem b{color:var(--red)}.problem span{display:block;color:#71849a;font-size:10px;margin-top:3px}.termOut{min-height:0;overflow:auto;padding:9px 10px;font:12px/1.55 ui-monospace,Consolas,monospace}.termLine{white-space:pre-wrap;word-break:break-word}.termPrompt{color:#70e8b6}.termErr{color:#ff889c}.termInput{display:flex;align-items:center;gap:7px;border-top:1px solid var(--line);padding:6px;background:#080e15}.termInput input{flex:1;background:transparent;border:0;outline:none;color:#e5eef8;min-width:0}.termHint{color:#657a90;font-size:10px}
+.mobileOnly{display:none}.mobileMenu{position:absolute;right:7px;top:46px;width:210px;display:none;grid-template-columns:1fr;background:#0a1018;border:1px solid #294056;border-radius:12px;padding:7px;box-shadow:0 20px 70px #000b}.mobileMenu.open{display:grid}.mobileMenu button{background:#0e1722;border:1px solid #1d3045;border-radius:8px;text-align:left;padding:10px;color:#c5d4e3;margin:2px 0}.mobileMenu button:hover{background:#132033}.footer{display:flex;align-items:center;gap:14px;padding:0 10px;background:#080d14;border-top:1px solid var(--line);font-size:10px;color:#65798f}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 9px #4be3a7}.errorDot{background:var(--red);box-shadow:0 0 9px #ff647c}
+@media(max-width:1050px){.main{grid-template-columns:42px 210px minmax(0,1fr)}.runtime{position:fixed;right:0;top:50px;bottom:25px;width:min(92vw,420px);z-index:8;box-shadow:-20px 0 55px #000c;transform:translateX(105%);transition:.22s}.runtime.open{transform:none}.project{display:none}}
+@media(max-width:720px){.sidebar{display:none}.main{grid-template-columns:42px minmax(0,1fr)}.brandText{display:none}.desktopOnly{display:none}.mobileOnly{display:block!important}.mobileMenu{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="logo">V</div><div class="brand"><span class="brandText">VYRON</span></div><span class="sub">CODE</span>
+  <input id="projectName" class="project" value="Starter Project" aria-label="Project name">
+  <button class="btn desktopOnly" id="saveBtn">Save</button>
+  <button class="btn desktopOnly accent" id="importBtn">Import ZIP</button>
+  <button class="btn desktopOnly accent" id="exportBtn">Export ZIP</button>
+  <div class="spacer"></div>
+  <button class="btn warn desktopOnly" id="terminalBtn">Terminal</button>
+  <button class="btn" id="stopBtn">■ Stop</button><button class="btn run" id="runBtn">▶ Run</button>
+  <button class="btn" id="settingsBtn">⚙</button><button class="btn mobileOnly" id="menuBtn">⋯</button><div class="mobileMenu" id="mobileMenu"><button data-mobile-action="save">Save project</button><button data-mobile-action="import">Import ZIP</button><button data-mobile-action="export">Export ZIP</button><button data-mobile-action="terminal">Open terminal</button><button data-mobile-action="settings">Settings</button></div>
+</header>
+<div class="main">
+  <nav class="activity">
+    <button class="act on" data-view="explorer" title="Explorer">▣</button>
+    <button class="act" data-view="search" title="Search">⌕</button>
+    <button class="act" data-view="outline" title="Outline">⌗</button>
+    <button class="act" data-view="run" title="Run / Test">▷</button>
+    <button class="act" data-view="extensions" title="Languages">◫</button>
+    <button class="act bottom" data-view="account" title="Account">●</button>
+  </nav>
+  <aside class="sidebar" id="sidebar">
+    <div class="sideHead"><span id="sideTitle">EXPLORER</span><span class="grow"></span><button class="smallBtn" id="newFileBtn">＋</button></div>
+    <div class="tree" id="tree"></div>
+    <div class="outline" id="outline"><h4>CODE HIERARCHY</h4><div id="outlineBody"></div></div>
+  </aside>
+  <section class="editorArea">
+    <div class="tabs" id="tabs"></div>
+    <div class="editorWrap"><textarea id="code"></textarea></div>
+    <div class="status"><span id="cursor">Ln 1, Col 1</span><span class="lang" id="lang">HTML</span><span>UTF-8</span><span id="saveState" class="ok">● Saved</span><span class="spacer"></span><span id="runtimeState">Ready</span></div>
+  </section>
+  <section class="runtime" id="runtime">
+    <div class="rTabs"><button class="rTab active" data-panel="preview">Preview</button><button class="rTab" data-panel="console">Console</button><button class="rTab" data-panel="terminal">Terminal</button><button class="rTab" data-panel="problems">Problems</button></div>
+    <div class="panel preview active" data-panel-view="preview">
+      <div class="tools"><span class="url" id="url">VYRON / ready</span><button class="btn" id="refresh">↻</button><button class="btn" id="openLocal">↗</button></div>
+      <div class="frameWrap"><iframe class="frame" id="frame" sandbox="allow-scripts allow-forms"></iframe></div>
+    </div>
+    <div class="panel console" data-panel-view="console"><div class="head"><span>CONSOLE</span><span class="grow"></span><button class="smallBtn" id="clearConsole">Clear</button></div><div class="body" id="consoleBody"><div class="empty">Run the project to see output.</div></div></div>
+    <div class="panel terminal" data-panel-view="terminal"><div class="head"><span>INTEGRATED TERMINAL</span><span class="grow"></span><span class="termHint" id="termMode">Android shell</span></div><div class="termOut" id="termOut"><div class="termLine">VYRON Terminal — type <b>help</b> for common commands.</div></div><div class="termInput"><span class="termPrompt">$</span><input id="termInput" autocomplete="off" spellcheck="false" placeholder="command..."/><button class="smallBtn" id="termSend">Run</button></div></div>
+    <div class="panel problems" data-panel-view="problems"><div class="head"><span>PROBLEMS</span><span class="grow"></span><button class="smallBtn" id="clearProblems">Clear</button></div><div class="body" id="problemsBody"><div class="empty">No problems detected.</div></div></div>
+  </section>
+</div>
+<footer class="footer"><span class="dot" id="stateDot"></span><span id="statusText">Ready</span><span>VYRON Code</span><span class="spacer"></span><span id="projectInfo">0 files</span></footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $=id=>document.getElementById(id);
+const Native=window.Android||null;
+const DEFAULT={name:'Starter Project',files:{
+  'index.html':`<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1">\n  <title>VYRON Demo</title>\n</head>\n<body>\n  <main class="card">\n    <p class="eyebrow">VYRON CODE</p>\n    <h1>Hello, VYRON.</h1>\n    <p>Edit the files on the left, then press Run.</p>\n    <button id="hello">Test local runtime</button>\n    <p id="out"></p>\n  </main>\n</body>\n</html>`,
+  'styles/style.css':`*{box-sizing:border-box}\nbody{margin:0;min-height:100vh;display:grid;place-items:center;background:#071019;color:#eef7ff;font:16px system-ui,sans-serif}.card{text-align:center;padding:36px}.eyebrow{letter-spacing:.18em;color:#48c7ff;font-size:11px}.card button{padding:10px 16px;border-radius:10px;border:1px solid #255270;background:#0c2030;color:white}.card button:hover{background:#112f45}#out{min-height:1.4em;color:#73e8b6}`,
+  'scripts/main.js':`console.log("VYRON local runtime ready");\ndocument.getElementById("hello").addEventListener("click",()=>{\n  document.getElementById("out").textContent="It works — local preview is running.";\n  console.log("button clicked");\n});`,
+  'README.md':'# VYRON Code\n\nA local Android coding workspace.\n'
+}};
+let project=JSON.parse(JSON.stringify(DEFAULT));
+let currentFile='index.html',dirty=false,running=false,lastProblems=[],localUrl='';
+let editor=null,requestCounter=0;
+const fileLang={html:'HTML',css:'CSS',js:'JavaScript',ts:'TypeScript',json:'JSON',md:'Markdown',py:'Python',java:'Java',kt:'Kotlin',rs:'Rust',cpp:'C/C++',c:'C',go:'Go',php:'PHP',sh:'Shell',sql:'SQL',xml:'XML'};
+const cmMode={html:'xml',css:'css',js:'javascript',ts:'javascript',json:'javascript',xml:'xml'};
+function ext(path){const m=path.toLowerCase().match(/\.([^.\/]+)$/);return m?m[1]:''}
+function langFor(path){return fileLang[ext(path)]||'Plain Text'}
+function iconFor(path){const e=ext(path);return e==='html'?'H':e==='css'?'C':e==='js'?'JS':e==='py'?'PY':e==='json'?'{}':e==='md'?'M':e==='rs'?'RS':e==='java'?'J':e==='kt'?'K':e==='go'?'GO':e==='cpp'||e==='c'?'C++':e==='sh'?'SH':'•'}
+function escape(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function nativeJson(){return {name:project.name,files:project.files}}
+function markDirty(v=true){dirty=v;$('saveState').textContent=v?'● Unsaved':'● Saved';$('saveState').className=v?'warn':'ok';$('statusText').textContent=v?'Unsaved changes':'Ready';if(v)debouncedSave()}
+let saveTimer=null;function debouncedSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1000)}
+function saveProject(){syncEditor();if(!Native)return;Native.saveProject(JSON.stringify(nativeJson()));markDirty(false);}
+function syncEditor(){if(editor)project.files[currentFile]=editor.getValue()}
+function ensureCM(){
+  if(editor)return;
+  if(window.CodeMirror){
+    editor=CodeMirror.fromTextArea($('code'),{mode:'xml',theme:'material-darker',lineNumbers:true,lineWrapping:false,styleActiveLine:true,autoCloseBrackets:true,matchBrackets:true,indentUnit:2,tabSize:2,extraKeys:{'Ctrl-S':()=>saveProject(),'Cmd-S':()=>saveProject(),'Ctrl-Enter':run,'Cmd-Enter':run,'Tab':cm=>{cm.replaceSelection('  ','end')}}});
+    editor.on('change',()=>{project.files[currentFile]=editor.getValue();markDirty(true);updateOutline();});
+    editor.on('cursorActivity',updateCursor);
+  }else{
+    const ta=$('code');ta.className='fallbackEditor';
+    editor={getValue:()=>ta.value,setValue:v=>{ta.value=v},clearHistory:()=>{},setOption:()=>{},focus:()=>ta.focus(),getCursor:()=>{const before=ta.value.slice(0,ta.selectionStart);const lines=before.split('\n');return {line:lines.length-1,ch:lines[lines.length-1].length}},replaceSelection:v=>{const a=ta.selectionStart,b=ta.selectionEnd;ta.value=ta.value.slice(0,a)+v+ta.value.slice(b);ta.selectionStart=ta.selectionEnd=a+v.length}};
+    ta.addEventListener('input',()=>{project.files[currentFile]=ta.value;markDirty(true);updateOutline();updateCursor();});
+  }
+}
+function setEditor(path){
+  syncEditor();currentFile=path;ensureCM();const value=project.files[path]??'';
+  if(editor){editor.setValue(value);editor.clearHistory();const e=ext(path);editor.setOption('mode',cmMode[e]||null);editor.focus();}
+  renderTabs();renderTree();updateMeta();updateOutline();
+}
+function updateMeta(){ $('lang').textContent=langFor(currentFile); $('projectInfo').textContent=Object.keys(project.files).length+' files'; updateCursor(); }
+function updateCursor(){if(!editor)return;const c=editor.getCursor();$('cursor').textContent=`Ln ${c.line+1}, Col ${c.ch+1}`}
+function renderTabs(){const el=$('tabs');el.innerHTML='';const paths=Object.keys(project.files);const ordered=[currentFile,...paths.filter(x=>x!==currentFile)].slice(0,8);ordered.forEach(p=>{const b=document.createElement('button');b.className='tab'+(p===currentFile?' active':'');b.textContent=iconFor(p)+' '+p.split('/').pop();b.onclick=()=>setEditor(p);el.appendChild(b)})}
+function treeData(){const root={name:project.name,folders:{},files:[]};Object.keys(project.files).sort().forEach(path=>{const parts=path.split('/').filter(Boolean);let node=root;parts.forEach((part,i)=>{if(i===parts.length-1)node.files.push({name:part,path});else{node.folders[part]??={name:part,folders:{},files:[]};node=node.folders[part]}})});return root}
+function renderTree(){const tree=$('tree');tree.innerHTML='';const root=treeData();tree.appendChild(folderRow(root.name,false,0));renderFolder(root,0,tree,false);updateMeta()}
+function folderRow(name,open,level){const d=document.createElement('div');d.className='row';d.style.paddingLeft=(7+level*15)+'px';d.innerHTML='<span class="chev">⌄</span><span class="folder">▰</span><span>'+escape(name)+'</span>';return d}
+function renderFolder(node,level,target,isRoot=true){Object.keys(node.folders).sort().forEach(name=>{const f=node.folders[name],r=folderRow(name,true,level+1);target.appendChild(r);renderFolder(f,level+1,target,false)});node.files.sort((a,b)=>a.path.localeCompare(b.path)).forEach(f=>{const r=document.createElement('div');r.className='row'+(f.path===currentFile?' active':'');r.style.paddingLeft=(7+(level+1)*15)+'px';r.innerHTML='<span class="chev"></span><span class="fileIcon">'+escape(iconFor(f.path))+'</span><span>'+escape(f.name)+'</span>';r.onclick=()=>setEditor(f.path);target.appendChild(r)});if(isRoot){}}
+function updateOutline(){const out=$('outlineBody');if(!editor){out.innerHTML='';return}const code=editor.getValue(),e=ext(currentFile);let items=[];
+  if(e==='html'||e==='xml'){for(const m of code.matchAll(/<h([1-6])[^>]*>([^<]*)<\/h\1>/gi))items.push({t:'H'+m[1],x:m[2].trim()})}
+  else if(['js','ts'].includes(e)){for(const m of code.matchAll(/(?:function\s+([A-Za-z_$][\w$]*)|const\s+([A-Za-z_$][\w$]*)\s*=\s*\([^)]*\)\s*=>)/g))items.push({t:'ƒ',x:m[1]||m[2]})}
+  else if(e==='css'){for(const m of code.matchAll(/(?:^|})\s*([^@][^{]+)\{/g))items.push({t:'#',x:m[1].trim().replace(/\s+/g,' ')})}
+  out.innerHTML=items.length?items.slice(0,80).map((x,i)=>`<div class="outlineItem" data-line="${i}">${escape(x.t)} ${escape(x.x)}</div>`).join(''):'<div style="padding:6px;color:#5d7186;font-size:11px">No symbols detected.</div>';
+}
+function setPanel(panel){document.querySelectorAll('.rTab').forEach(x=>x.classList.toggle('active',x.dataset.panel===panel));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.dataset.panelView===panel));}
+function setRuntime(open){$('runtime').classList.toggle('open',open)}
+function addConsole(text,type='log'){const b=$('consoleBody');b.querySelector('.empty')?.remove();const d=document.createElement('div');d.className='log '+(type==='error'?'err':type==='warn'?'warn':type==='info'?'ok':'');d.textContent=text;b.appendChild(d);b.scrollTop=b.scrollHeight}
+function clearConsole(){$('consoleBody').innerHTML='<div class="empty">Console cleared.</div>'}
+function problems(){const body=$('problemsBody');if(!lastProblems.length){body.innerHTML='<div class="empty">No problems detected.</div>';return}body.innerHTML=lastProblems.map(p=>`<div class="problem"><b>${escape(p.type||'Error')}: ${escape(p.message||'')}</b><span>${escape(p.file||currentFile)}:${p.line||1}:${p.column||1}</span></div>`).join('')}
+function parseJS(){const js=project.files[findByExt('js')]||'';if(!js.trim())return null;try{new Function(js);return null}catch(e){return {type:'SyntaxError',message:e.message,file:findByExt('js')||currentFile,line:1,column:1}}}
+function findByExt(e){return Object.keys(project.files).find(x=>ext(x)===e)||''}
+function buildPreview(){const htmlFile=findByExt('html');if(!htmlFile)return '';let html=project.files[htmlFile]||'';const css=Object.keys(project.files).filter(x=>ext(x)==='css').map(x=>project.files[x]).join('\n');const js=Object.keys(project.files).filter(x=>ext(x)==='js').map(x=>project.files[x]).join('\n');const style='<style data-vyron="css">'+css.replace(/<\/style/gi,'<\\/style>')+'</style>';const bridge='<script>\n(function(){const send=(type,p)=>parent.postMessage({source:"VYRON_RUNTIME",type,...p},"*");["log","warn","error","info"].forEach(k=>{const o=console[k];console[k]=function(){send("console",{level:k,args:[...arguments].map(v=>typeof v==="string"?v:JSON.stringify(v))});try{o.apply(console,arguments)}catch(e){}}});window.addEventListener("error",e=>send("error",{message:e.message,line:e.lineno,column:e.colno}));window.addEventListener("unhandledrejection",e=>send("error",{message:String(e.reason)}));window.addEventListener("load",()=>send("ready",{}));})();<\/script>';
+  html=html.replace(/<\/head>/i,style+bridge+'</head>');if(!/<\/head>/i.test(html))html=style+bridge+html;if(js)html=html.replace(/<\/body>/i,'<script>'+js.replace(/<\/script/gi,'<\\/script')+'<\\/script></body>');else html+='<script><\\/script>';return html}
+function run(){syncEditor();lastProblems=[];const jsErr=parseJS();if(jsErr){lastProblems=[jsErr];problems();setPanel('problems');$('runtimeState').textContent='Error';$('statusText').textContent='Project error';$('stateDot').classList.add('errorDot');return}
+  const htmlFile=findByExt('html');$('runtimeState').textContent='Running';$('statusText').textContent='Running';$('stateDot').classList.remove('errorDot');setPanel('preview');setRuntime(true);
+  if(htmlFile){running=true;$('url').textContent='VYRON / starting localhost…';if(Native){localUrl=Native.startLocalServer(JSON.stringify(nativeJson()));if(localUrl){$('frame').src=localUrl;$('url').textContent=localUrl}else{$('frame').srcdoc=buildPreview();localUrl=''}}else{$('frame').srcdoc=buildPreview();localUrl=''}return}
+  const path=currentFile, e=ext(path), cmd={py:`python3 ${quote(path)}`,js:`node ${quote(path)}`,sh:`sh ${quote(path)}`,java:`javac ${quote(path)} && java ${quote(path).replace(/\.java$/,'')}`,rs:`rustc ${quote(path)} -o /tmp/vyron_bin && /tmp/vyron_bin`,cpp:`g++ ${quote(path)} -std=c++17 -o /tmp/vyron_bin && /tmp/vyron_bin`}[e];
+  if(!cmd){addConsole('No local runner is configured for '+langFor(path)+'. Use Terminal or install a runtime/toolchain.','warn');setPanel('console');$('runtimeState').textContent='Ready';return}
+  addConsole('$ '+cmd,'info');termRun(cmd);}
+function quote(s){return '"'+String(s).replace(/"/g,'\\"')+'"'}
+function refresh(){run()}
+window.addEventListener('message',e=>{const d=e.data;if(!d||d.source!=='VYRON_RUNTIME')return;if(d.type==='ready'){addConsole('✓ Preview ready','info');$('runtimeState').textContent='Preview active'}if(d.type==='console'){addConsole((d.args||[]).join(' '),d.level==='error'?'error':d.level)}if(d.type==='error'){lastProblems=[{type:'RuntimeError',message:d.message,file:findByExt('js')||currentFile,line:d.line||1,column:d.column||1}];problems();setPanel('problems');$('runtimeState').textContent='Error';$('statusText').textContent='Runtime error';$('stateDot').classList.add('errorDot');}});
+function termAppend(text,cls){const d=document.createElement('div');d.className='termLine '+(cls||'');d.textContent=text;$('termOut').appendChild(d);$('termOut').scrollTop=$('termOut').scrollHeight}
+function termRun(command){const id='r'+(++requestCounter);termAppend('$ '+command,'termPrompt');if(!Native){termAppend('Native terminal unavailable in browser mode.','termErr');return}Native.runCommandAsync(command,id)}
+window.NativeTerminal={onResult:(id,encoded,code)=>{let out='';try{out=decodeURIComponent(escape(atob(encoded||'')))}catch(e){try{out=atob(encoded||'')}catch(_){out=''}}if(out)termAppend(out,code===0?'':'termErr');termAppend('[exit '+code+']',code===0?'':'termErr')}};
+$('termSend').onclick=()=>{const v=$('termInput').value.trim();if(v){$('termInput').value='';if(v==='help'){termAppend('Common: pwd, ls, cd, mkdir, cat, echo, clear, whoami, uname -a, git --version');return}if(v==='clear'){$('termOut').innerHTML='';return}termRun(v)}};$('termInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('termSend').click()});
+function newFile(){const path=prompt('New file path, for example src/main.py');if(!path)return;if(project.files[path]!=null){alert('File already exists.');return}project.files[path]='';setEditor(path);saveProject();}
+$('newFileBtn').onclick=newFile;
+$('saveBtn').onclick=saveProject;
+$('runBtn').onclick=run;
+$('stopBtn').onclick=()=>{running=false;localUrl='';if(Native)Native.stopLocalServer();$('frame').srcdoc='<div style=\"font:14px system-ui;padding:24px;color:#66798d\">Local preview stopped.</div>';$('url').textContent='VYRON / stopped';$('runtimeState').textContent='Stopped';$('statusText').textContent='Ready';};
+$('refresh').onclick=refresh;
+$('terminalBtn').onclick=()=>{setPanel('terminal');setRuntime(true);$('termInput').focus()};
+$('clearConsole').onclick=clearConsole;$('clearProblems').onclick=()=>{lastProblems=[];problems()};
+$('openLocal').onclick=()=>{if(!running)run();setTimeout(()=>{try{if(localUrl)window.open(localUrl,'_blank','noopener,noreferrer');else{const blob=new Blob([buildPreview()],{type:'text/html'});const url=URL.createObjectURL(blob);window.open(url,'_blank','noopener,noreferrer');setTimeout(()=>URL.revokeObjectURL(url),5000)}}catch(_){}} ,80)};
+$('exportBtn').onclick=()=>{syncEditor();if(Native)Native.exportProject(JSON.stringify(nativeJson()));else alert('Export is available inside the Android app.')} ;
+$('importBtn').onclick=()=>{if(Native)Native.importProject();else alert('Import is available inside the Android app.')};
+$('settingsBtn').onclick=()=>{if(Native)Native.openSettings();else alert('Open Android Settings from the app.')};
+$('menuBtn').onclick=()=>$('mobileMenu').classList.toggle('open');
+document.querySelectorAll('[data-mobile-action]').forEach(b=>b.onclick=()=>{const a=b.dataset.mobileAction; $('mobileMenu').classList.remove('open'); if(a==='save')$('saveBtn').click(); if(a==='import')$('importBtn').click(); if(a==='export')$('exportBtn').click(); if(a==='terminal')$('terminalBtn').click(); if(a==='settings')$('settingsBtn').click();});
+$('projectName').addEventListener('input',()=>{project.name=$('projectName').value.trim()||'Untitled Project';markDirty(true)});
+document.querySelectorAll('.rTab').forEach(b=>b.onclick=()=>setPanel(b.dataset.panel));
+document.querySelectorAll('.act').forEach(b=>b.onclick=()=>{document.querySelectorAll('.act').forEach(x=>x.classList.remove('on'));b.classList.add('on');const v=b.dataset.view;if(v==='explorer'){ $('sideTitle').textContent='EXPLORER';$('outline').style.display='block'}else if(v==='outline'){$('sideTitle').textContent='OUTLINE';$('outline').style.display='block';$('outline').scrollIntoView({block:'end'})}else if(v==='run'){run()}else if(v==='extensions'){showLanguages()}else if(v==='search'){searchFiles()}else if(v==='account'){if(Native)Native.openAccount()}});
+function showLanguages(){const list=['HTML','CSS','JavaScript','TypeScript','JSON','Markdown','Python','Java','Kotlin','Rust','C/C++','Go','PHP','Shell','SQL','XML'];alert('Languages available in the editor:\n\n'+list.join('\n')+'\n\nHTML/CSS/JS get the embedded browser runtime. Other languages run through the Android terminal when a matching runtime/toolchain is installed (for example via Termux/Shizuku).')}
+function searchFiles(){const q=prompt('Search in workspace');if(!q)return;const hits=[];Object.entries(project.files).forEach(([p,c])=>String(c).split('\n').forEach((line,i)=>{if(line.toLowerCase().includes(q.toLowerCase()))hits.push(p+':'+(i+1)+'  '+line.trim())}));alert(hits.slice(0,50).join('\n')||'No matches.')}
+window.onNativeProjectLoaded=json=>{try{const p=typeof json==='string'?JSON.parse(json):json;if(p&&p.files){project={name:p.name||DEFAULT.name,files:p.files};$('projectName').value=project.name;currentFile=Object.keys(project.files)[0]||'index.html';setEditor(currentFile);markDirty(false)}}catch(e){console.error(e)}};
+window.onNativeProjectImported=json=>window.onNativeProjectLoaded(json);
+window.onNativeSettings=payload=>{try{const s=typeof payload==='string'?JSON.parse(payload):payload;document.body.dataset.settings=JSON.stringify(s||{})}catch(_){}};
+function boot(){ensureCM();renderTree();renderTabs();setEditor(currentFile);$('projectName').value=project.name;problems();if(Native){try{const raw=Native.getProject();if(raw)window.onNativeProjectLoaded(raw)}catch(_){}}}
+boot();
+})();
+</script>
+</body>
+</html>
